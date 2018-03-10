@@ -7,7 +7,7 @@ namespace SignalrService
     {
         public async Task SendToAll(ChatMessage message)
         {
-            await Clients.All.SendAsync("Send", message);
+            await Clients.All.SendAsync("BroadCast", message);
         }
     }
 }
