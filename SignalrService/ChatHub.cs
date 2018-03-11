@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Threading.Tasks;
 
 namespace SignalrService
@@ -8,15 +9,21 @@ namespace SignalrService
 
         public int OnCounter = 0;
 
-        public override async Task OnConnectedAsync()
+        public override Task OnConnectedAsync()
         {
-            await Clients.All.InvokeAsync("ShowUsersOnline", ++OnCounter);
-            await base.OnConnectedAsync();
+            Clients.All.InvokeAsync("ShowUsersNumber", ++OnCounter);
+            return base.OnConnectedAsync();
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            Clients.All.InvokeAsync("ShowUsersNumber", --OnCounter);
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task SendToAll(ChatMessage message)
         {
-            await Clients.All.InvokeAsync("SendToAll", message);
+            await Clients.All.InvokeAsync("Send", message);
         }
 
         public async Task JoinGroup(string groupName)
@@ -31,7 +38,7 @@ namespace SignalrService
 
         public async Task SendToGroup(string groupName, ChatMessage message)
         {
-            await Clients.Group(groupName).InvokeAsync("SendToGroup", message);
+            await Clients.Group(groupName).InvokeAsync("GroupMessage", message);
         }
     }
 }
