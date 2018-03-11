@@ -23,7 +23,7 @@ namespace SignalrService
 
         public async Task SendToAll(ChatMessage message)
         {
-            await Clients.All.InvokeAsync("Send", message);
+            await Clients.All.InvokeAsync("SendToAll", message);
         }
 
         public async Task JoinGroup(string groupName)
