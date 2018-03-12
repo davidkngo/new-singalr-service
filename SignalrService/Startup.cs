@@ -28,7 +28,12 @@ namespace SignalrService
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<ChatHub>("chat");
+                routes.MapHub<ChatHub>("chat", options =>
+                {
+                    options.Transports = Microsoft.AspNetCore.Sockets.TransportType.All;
+                    options.LongPolling.PollTimeout = TimeSpan.FromSeconds(10);
+                    options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(10);
+                });
             });
         }
     }
